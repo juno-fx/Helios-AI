@@ -23,13 +23,13 @@ if [ ! -z ${HW3D+x} ]; then
 fi
 
 ## Directory setup for home folder ##
-mkdir -p "$HOME/Desktop" "$HOME/Downloads"
 rm -rf "$HOME/.config/pulse"
 
 # Setup the VNC location so we can share the home directories
 VNC_LOCATION=/opt/helios/.vnc/
 mkdir -p "$VNC_LOCATION"
-ln -sfv "$VNC_LOCATION"
+rm -rf .vnc
+ln -sf "$VNC_LOCATION" .vnc
 
 # Startup Script for DE
 cp /opt/helios/startwm.sh "$HOME/.vnc/xstartup"
@@ -47,16 +47,7 @@ if [[ -f "$HOME/.kasmpasswd" ]]; then
 fi
 ln -sf "$VNC_LOCATION/.kasmpasswd" "$HOME/.kasmpasswd"
 
-# SSL cert
-rm -f "${HOME}/.vnc/self.pem"
-openssl req -x509 \
-	-nodes \
-	-days 3650 \
-	-newkey rsa:2048 \
-	-keyout "${HOME}/.vnc/self.pem" \
-	-out "${HOME}/.vnc/self.pem" \
-	-subj "/C=US/ST=VA/L=None/O=None/OU=DoFu/CN=kasm/emailAddress=none@none.none"
-
+echo "Starting KasmVNC"
 # Start KasmVNC
 vncserver $DISPLAY \
 	$KASMVNC_HW3D \
@@ -78,8 +69,6 @@ vncserver $DISPLAY \
 	kasmaudio \
 	8081 \
 	4901 \
-	"${HOME}/.vnc/self.pem" \
-	"${HOME}/.vnc/self.pem" \
 	"${USER}:${VNC_PW}" >/dev/null &
 HOME=/var/run/pulse pulseaudio --start
 HOME=/var/run/pulse no_proxy=127.0.0.1 ffmpeg \
@@ -98,28 +87,19 @@ HOME=/var/run/pulse no_proxy=127.0.0.1 ffmpeg \
 
 # enter a while loop and wait for the curl command to return success
 tries=0
-echo "Waiting for KasmVNC to start..."
+echo "Waiting for KasmVNC to stabilize..."
 while [ $tries -le 15 ]; do
-	response=$(curl -s -w "%{http_code}" "http://127.0.0.1:3000${PREFIX-}")
-	http_code=$(tail -n1 <<<"$response")
-	if [ "$http_code" == "200" ]; then
-		echo "Up and running, releasing healthz endpoint."
-
-		# Unblock the healthz endpoint
-		touch /tmp/.healthz
-		chmod -v 777 /tmp/.healthz
+	response=$(curl -I http://127.0.0.1:6901 2>/dev/null | head -n 1 | cut -d$' ' -f2)
+	if [ "$response" == "404" ]; then
+		echo "Ready..."
 		break
 	fi
 
 	if [ $tries -eq 15 ]; then
-		echo "KasmVNC did not start within the expected time frame. Exiting."
+		echo "KasmVNC failed to start"
 		cat $HOME/.vnc/*${DISPLAY}.log
 		exit 1
 	fi
-
 	tries=$(($tries + 1))
 	sleep .5
 done
-
-# Show KasmVNC Logs
-tail -f $HOME/.vnc/*${DISPLAY}.log
