@@ -28,5 +28,5 @@ MiscSlimTabs=FALSE
 MiscNewTabAdjacent=FALSE
 MiscSearchDialogOpacity=100
 MiscShowUnsafePasteDialog=TRUE
-CustomCommand=/bin/bash
+CustomCommand=/bin/zsh
 
