@@ -43,6 +43,9 @@ else
 	if [ ! -d "/home/$USER" ]; then
 		echo "Creating home directory for $USER"
 		useradd -u "$UID" -g "$GID" -m -s /bin/bash "$USER"
+
+		mkdir -p "$HOME/Desktop" "$HOME/Downloads"
+		chown -R "$USER:$GID" "/home/$USER"
 	else
 		echo "Home directory for $USER already exists"
 		useradd -u "$UID" -g "$GID" -s /bin/bash "$USER"
@@ -57,10 +60,10 @@ else
 	echo "$USER:$PASSWORD" | chpasswd
 fi
 
-chown -R "$USER:$GID" "/home/$USER"
-
-# add to the ssl group
-usermod -aG ssl-cert "$USER" || (usermod -aG 101 "$USER" || echo "ssl-cert assignment failed. Skipping.")
+SSL_GID=$(stat -c '%g' "/etc/ssl/private")
+usermod -aG "$SSL_GID" "$USER"
+SNAKE_GID=$(stat -c '%g' "/etc/ssl/private/ssl-cert-snakeoil.key")
+usermod -aG "$SNAKE_GID" "$USER"
 
 # setup permissions
 mkdir -p /var/run/pulse
