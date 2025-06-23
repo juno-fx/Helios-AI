@@ -1,4 +1,8 @@
+![screenshot](./common/root/usr/share/themes/helios-icon.png)
+
 # 🚀 Helios
+
+![screenshot](./screenshot.png)
 
 Helios provides base images for multiple key Linux distributions, optimized to be as small as possible to:
 
@@ -32,6 +36,8 @@ Some key points about Helios:
     - [Alma Linux 9](#alma-linux-9)
 - 🏷️ [Versioning](#%EF%B8%8F-versioning)
 - ⚡ [Usage](#usage)  
+  - [Environment Variables](#environment-variables)
+  - [Ports](#ports)
   - Deployment  
     - [`Docker`](#docker)  
     - [`Docker Compose`](#docker-compose)  
@@ -79,7 +85,7 @@ Explore the supported Linux distributions with their versions, image sizes, and 
 
 #### [Alpine 3](https://hub.docker.com/_/alpine/tags?name=3)
 
-- **Size:** 1.16 GB  
+- **Size:** 1.17 GB  
 - **X Server:** 1.20.14 (Custom)
 
 ---
@@ -88,12 +94,12 @@ Explore the supported Linux distributions with their versions, image sizes, and 
 
 #### [Debian 12 (Bookworm)](https://hub.docker.com/_/debian/tags?name=bookworm)
 
-- **Size:** 1.67 GB  
+- **Size:** 1.68 GB  
 - **X Server:** 21.1.4 (Custom)
 
 #### [Debian Rolling (Trixie/Sid)](https://hub.docker.com/_/debian/tags?name=sid)
 
-- **Size:** 1.72 GB  
+- **Size:** 1.74 GB  
 - **X Server:** 21.1.4 (Custom)
 
 #### [Kali Linux (Rolling Release)](https://hub.docker.com/r/kalilinux/kali-rolling)
@@ -101,7 +107,7 @@ Explore the supported Linux distributions with their versions, image sizes, and 
 > [!TIP]  
 > No default Kali tools are installed in this image. Please refer to the [Kali Linux Docker Image documentation](https://www.kali.org/docs/containers/official-kalilinux-docker-images/) for installing them.
 
-- **Size:** 1.72 GB (Excludes Kali tools which increase image size)  
+- **Size:** 1.74 GB (Excludes Kali tools which increase image size)  
 - **X Server:** 21.1.4 (Custom)
 
 ---
@@ -110,12 +116,12 @@ Explore the supported Linux distributions with their versions, image sizes, and 
 
 #### [Ubuntu 24.04 (Noble)](https://hub.docker.com/_/ubuntu/tags?name=noble)
 
-- **Size:** 1.46 GB  
+- **Size:** 1.45 GB  
 - **X Server:** 21.1.4 (Custom)
 
 #### [Ubuntu 22.04 (Jammy)](https://hub.docker.com/_/ubuntu/tags?name=jammy)
 
-- **Size:** 1.34 GB  
+- **Size:** 1.4 GB  
 - **X Server:** 21.1.4 (Custom)
 
 ---
@@ -127,7 +133,7 @@ Explore the supported Linux distributions with their versions, image sizes, and 
 > [!WARNING]  
 > WebRTC is currently **not supported** on Rocky Linux due to upstream Kasm limitations. This may change in the future.
 
-- **Size:** 1.86 GB  
+- **Size:** 1.87 GB  
 - **X Server:** 1.20.14 (Custom)
 
 #### [Alma Linux 9](https://hub.docker.com/_/almalinux/tags?name=9)
@@ -190,13 +196,17 @@ Helios uses its own versioning scheme independent of the underlying distro versi
 
 Environment variables are used to configure the Helios container. The following environment variables are available:
 
-| Name      | Value                              | Required |
-|-----------|------------------------------------|----------|
-| USER      | Name of the user                   | X        |
-| UID       | POSIX compliant uid for the user   | X        |
-| GID       | POSIX compliant gid for the user   |          |
-| PASSWORD  | Password set for the user          |          |
-| IDLE_TIME | Trigger the idle hook after x time |          |
+| Name          | Value                                                                             | Required |
+|---------------|-----------------------------------------------------------------------------------|----------|
+| USER          | Name of the user                                                                  | X        |
+| UID           | POSIX compliant uid for the user                                                  | X        |
+| GID           | POSIX compliant gid for the user                                                  |          |
+| PASSWORD      | Password set for the user                                                         |          |
+| IDLE_TIME     | Trigger the idle hook after x time                                                |          |
+| DESKTOP_FILES | Paths seperated by ":". For example, `/some/path/1/*.desktop:/some/*/2/*.desktop` |          |
+
+> [!CAUTION]
+> Desktop file scraping isn't supported in Alpine Linux.
 
 > [!TIP]  
 > The `GID` will match the `UID` if not specified.
