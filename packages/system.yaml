@@ -1,7 +1,16 @@
 packages:
+  - noble: firefox
+    jammy: firefox
+    debian: firefox-esr
+    kali: firefox-esr
+    sid: firefox-esr
+    rhel: firefox
+
   # ====================================
   # Common packages across all distributions
   # ====================================
+  - common: zsh
+
   # keyboard/mouse simulation for x11
   - common: xdotool
 
