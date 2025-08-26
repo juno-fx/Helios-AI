@@ -28,3 +28,6 @@ unzip CascadiaCode-2407.24.zip
 mv -v otf/static/* /usr/share/fonts/cascadia-code/
 rm -rfv /tmp/*
 fc-cache -f -v
+
+# thunar fix
+mv /usr/bin/thunar /usr/bin/thunar-real
