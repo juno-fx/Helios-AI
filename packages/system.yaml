@@ -9,6 +9,10 @@ packages:
   # ====================================
   # Common packages across all distributions
   # ====================================
+
+  # sudo for privilege escalation
+  - common: sudo
+
   - common: zsh
 
   # keyboard/mouse simulation for x11

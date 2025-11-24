@@ -52,7 +52,7 @@ Some key points about Helios:
 
 - **Lightweight**: Minimal resource usage for efficient performance.  
 - **WebRTC Support** (Coming Soon): High performance, low-latency video streaming.
-- **Audio Support** (Coming Soon): High-quality audio streaming for improved user experience.  
+- **Audio Support**: High-quality audio streaming for improved user experience.  
 - **VirtualGL Support**: Hardware-accelerated 3D graphics using `vglrun`.
 
 ---
@@ -61,7 +61,7 @@ Some key points about Helios:
 
 We maintain the latest versions of Selkies components to ensure access to the newest features and bug fixes:
 
-- **Selkies**: [d4b2c32b65c58329e14d580784d4cbb98cb44564](https://github.com/selkies-project/selkies/tree/d4b2c32b65c58329e14d580784d4cbb98cb44564)
+- **Selkies**: [d70c9155e0df97ac1e6ac7a4cce04e4b04840286](https://github.com/selkies-project/selkies/tree/3a7d4d4ee868c85af205d786455ece6a2d4a8935)
 
 ---
 
@@ -74,18 +74,18 @@ Explore the supported Linux distributions with their versions, image sizes, and 
 
 #### [Debian 12 (Bookworm)](https://hub.docker.com/_/debian/tags?name=bookworm)
 
-- **Size:** 1.55 GB  
+- **Size:** 1.6 GB  
 
 #### [Debian Rolling (Sid)](https://hub.docker.com/_/debian/tags?name=sid)
 
-- **Size:** 1.65 GB  
+- **Size:** 1.69 GB  
 
 #### [Kali Linux (Rolling Release)](https://hub.docker.com/r/kalilinux/kali-rolling)
 
 > [!TIP]  
 > No default Kali tools are installed in this image. Please refer to the [Kali Linux Docker Image documentation](https://www.kali.org/docs/containers/official-kalilinux-docker-images/) for installing them.
 
-- **Size:** 1.64 GB (Excludes Kali tools which increase image size) 
+- **Size:** 1.69 GB (Excludes Kali tools which increase image size) 
 
 ---
 
@@ -93,11 +93,11 @@ Explore the supported Linux distributions with their versions, image sizes, and 
 
 #### [Ubuntu 24.04 (Noble)](https://hub.docker.com/_/ubuntu/tags?name=noble)
 
-- **Size:** 1.4 GB 
+- **Size:** 1.45 GB 
 
 #### [Ubuntu 22.04 (Jammy)](https://hub.docker.com/_/ubuntu/tags?name=jammy)
 
-- **Size:** 1.29 GB
+- **Size:** 1.32 GB
 
 ---
 
@@ -105,11 +105,11 @@ Explore the supported Linux distributions with their versions, image sizes, and 
 
 #### [Rocky Linux 9](https://hub.docker.com/_/rockylinux/tags?name=9)
 
-- **Size:** 1.68 GB
+- **Size:** 1.8 GB
 
 #### [Alma Linux 9](https://hub.docker.com/_/almalinux/tags?name=9)
 
-- **Size:** 1.46 GB
+- **Size:** 1.56 GB
 
 ## 🏷️ Versioning
 
