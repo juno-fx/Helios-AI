@@ -1,6 +1,30 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
+# >>> conda initialize >>>
+__conda_setup="$('/opt/miniconda/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/opt/miniconda/etc/profile.d/conda.sh" ]; then
+        . "/opt/miniconda/etc/profile.d/conda.sh"
+    else
+        export PATH="/opt/miniconda/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
+export LD_LIBRARY_PATH="/usr/local/cuda/lib64:$LD_LIBRARY_PATH"
+
+# Shared conda environments
+export CONDA_ENVS_PATH="/opt/conda/envs"
+
+# UTF-8 locale
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
+
 ZSH_DISABLE_COMPFIX=true
 
 # Path to your oh-my-zsh installation.
@@ -122,7 +146,6 @@ activate () {
 
 alias htop="htop -t"
 alias ls="ls --color=auto -h"
-alias pip="uv pip"
 
 fastfetch
 
