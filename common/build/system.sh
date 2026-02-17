@@ -51,8 +51,8 @@ pip install vllm "huggingface_hub[cli]" "open-webui[all]"
 conda deactivate
 
 # setup shared conda environments
-chmod -R a+rX /opt/conda
-chmod -R a+rX /opt/miniconda
+chmod -R 7777 /opt/conda
+chmod -R 7777 /opt/miniconda
 
 # Cleanup
 rm -f /opt/Miniconda3-latest-Linux-x86_64.sh
