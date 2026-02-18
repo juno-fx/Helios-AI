@@ -13,7 +13,6 @@ git clone https://github.com/zsh-users/zsh-autosuggestions /opt/etc/oh-my-zsh/cu
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git /opt/etc/oh-my-zsh/custom/plugins/zsh-syntax-highlighting
 git clone https://github.com/MichaelAquilina/zsh-you-should-use.git /opt/etc/oh-my-zsh/custom/plugins/zsh-you-should-use
 
-
 # install custom theme
 cd /tmp/
 git clone https://github.com/vinceliuice/Orchis-theme.git
@@ -32,3 +31,30 @@ fc-cache -f -v
 # LD_PRELOAD fix
 mv /usr/bin/thunar /usr/bin/thunar-real
 mv /usr/bin/sudo /usr/bin/sudo-real
+
+# build out conda tooling
+mkdir -p /opt
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -P /opt
+chmod -v +x /opt/Miniconda3-latest-Linux-x86_64.sh
+/opt/Miniconda3-latest-Linux-x86_64.sh -b -p /opt/miniconda
+eval "$(/opt/miniconda/bin/conda shell.bash hook)"
+export PATH="/opt/miniconda/bin:/opt/miniconda/condabin:/usr/local/cuda/bin:$PATH"
+export LD_LIBRARY_PATH="/usr/local/cuda/lib64:$LD_LIBRARY_PATH"
+conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main
+conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
+conda config --set channel_priority strict
+
+# setup vllm environment
+conda create -p /opt/conda/envs/vllm python=3.12 -y
+conda activate /opt/conda/envs/vllm
+pip install vllm "huggingface_hub[cli]" "open-webui[all]"
+conda deactivate
+
+# setup shared conda environments
+chmod -R 7777 /opt/conda
+chmod -R 7777 /opt/miniconda
+
+# Cleanup
+rm -f /opt/Miniconda3-latest-Linux-x86_64.sh
+conda clean -afy
+rm -rf /tmp/*
