@@ -38,6 +38,35 @@ build-all:
 	@docker build . --build-arg IMAGE=rockylinux:9 --build-arg SRC=rocky-9 -t rocky-9
 	@docker build . --build-arg IMAGE=almalinux:9 --build-arg SRC=alma-9 -t alma-9
 
+push-all:
+	@docker build . --build-arg IMAGE=debian:bookworm --build-arg SRC=bookworm -t junoinnovations/helios-ai:unstable-bookworm
+	@docker push junoinnovations/helios-ai:unstable-bookworm
+	@docker system prune -af
+
+	@docker build . --build-arg IMAGE=debian:sid --build-arg SRC=sid -t junoinnovations/helios-ai:unstable-sid
+	@docker push junoinnovations/helios-ai:unstable-sid
+	@docker system prune -af
+
+	@docker build . --build-arg IMAGE=kalilinux/kali-rolling:latest --build-arg SRC=kali -t junoinnovations/helios-ai:unstable-kali
+	@docker push junoinnovations/helios-ai:unstable-kali
+	@docker system prune -af
+
+	@docker build . --build-arg IMAGE=ubuntu:jammy --build-arg SRC=jammy -t junoinnovations/helios-ai:unstable-jammy
+	@docker push junoinnovations/helios-ai:unstable-jammy
+	@docker system prune -af
+
+	@docker build . --build-arg IMAGE=ubuntu:noble --build-arg SRC=noble -t junoinnovations/helios-ai:unstable-noble
+	@docker push junoinnovations/helios-ai:unstable-noble
+	@docker system prune -af
+
+	@docker build . --build-arg IMAGE=rockylinux:9 --build-arg SRC=rocky-9 -t junoinnovations/helios-ai:unstable-rocky-9
+	@docker push junoinnovations/helios-ai:unstable-rocky-9
+	@docker system prune -af
+
+	@docker build . --build-arg IMAGE=almalinux:9 --build-arg SRC=alma-9 -t junoinnovations/helios-ai:unstable-alma-9
+	@docker push junoinnovations/helios-ai:unstable-alma-9
+	@docker system prune -af
+
 # DEBIAN
 bookworm:
 	@docker compose build --build-arg IMAGE=debian:bookworm --build-arg SRC=bookworm
