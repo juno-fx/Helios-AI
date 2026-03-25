@@ -60,7 +60,7 @@ jobs:
       - name: Build
         shell: bash
         env:
-          IMAGE: junoinnovations/helios:${{ (github.ref_name == 'main' && 'unstable') || (github.ref_name == 'testing' && 'testing') || steps.calculate_ref.outputs.ref }}-${{ matrix.distro.source }}
+          IMAGE: junoinnovations/helios-ai:${{ (github.ref_name == 'main' && 'unstable') || (github.ref_name == 'testing' && 'testing') || steps.calculate_ref.outputs.ref }}-${{ matrix.distro.source }}
         run: |
           echo "Building ${IMAGE}"
           docker build . --build-arg IMAGE=${{ matrix.distro.image }} --build-arg SRC=${{ matrix.distro.source }} -t ${IMAGE}
@@ -69,12 +69,13 @@ jobs:
         shell: bash
         if: ${{ github.ref_name == 'main' || startsWith(github.event.ref, 'refs/tags/v') || github.ref_name == 'testing' }}
         env:
-          IMAGE: junoinnovations/helios:${{ (github.ref_name == 'main' && 'unstable') || (github.ref_name == 'testing' && 'testing') || steps.calculate_ref.outputs.ref }}-${{ matrix.distro.source }}
+          IMAGE: junoinnovations/helios-ai:${{ (github.ref_name == 'main' && 'unstable') || (github.ref_name == 'testing' && 'testing') || steps.calculate_ref.outputs.ref }}-${{ matrix.distro.source }}
         run: |
           echo "Building ${IMAGE}"
           docker push ${IMAGE}
 
       - name: Clean Up
         shell: bash
+        continue-on-error: true
         if: always()
         run: docker system prune -af
