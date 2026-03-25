@@ -21,7 +21,7 @@ on:
 jobs:
   build:
     runs-on:
-      - HELIOS-AI
+      - STANDARD-RUNNER
     strategy:
       matrix:
         distro:

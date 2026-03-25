@@ -119,7 +119,9 @@ COPY common/root/ /
 
 # LD_PRELOAD wrapper handlers (selkies hack)
 RUN chmod +x /usr/bin/thunar \
-    && chmod +x /usr/bin/sudo
+    && chmod +x /usr/bin/sudo \
+    && chmod +x /usr/bin/google-chrome-stable \
+    && chmod +x /usr/bin/google-chrome
 
 # copy in distro specific custom rootfs changes
 COPY ${SRC}/root/ /

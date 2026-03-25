@@ -1,0 +1,4 @@
+#!/bin/bash
+rm -rf $HOME/.config/google-chrome/Singleton* || true
+unset LD_PRELOAD
+google-chrome-stable-real --no-sandbox "$@"

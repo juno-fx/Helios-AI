@@ -28,33 +28,25 @@ mv -v otf/static/* /usr/share/fonts/cascadia-code/
 rm -rfv /tmp/*
 fc-cache -f -v
 
+# install chrome
+if command -v apt &> /dev/null; then
+  apt update
+  apt install -y wget unzip
+  wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+  dpkg -i google-chrome-stable_current_amd64.deb || apt -f install -y
+  rm google-chrome-stable_current_amd64.deb
+else
+  dnf install -y wget unzip
+  wget https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
+  dnf install -y google-chrome-stable_current_x86_64.rpm
+  rm google-chrome-stable_current_x86_64.rpm
+fi
+
 # LD_PRELOAD fix
 mv /usr/bin/thunar /usr/bin/thunar-real
 mv /usr/bin/sudo /usr/bin/sudo-real
-
-# build out conda tooling
-mkdir -p /opt
-wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -P /opt
-chmod -v +x /opt/Miniconda3-latest-Linux-x86_64.sh
-/opt/Miniconda3-latest-Linux-x86_64.sh -b -p /opt/miniconda
-eval "$(/opt/miniconda/bin/conda shell.bash hook)"
-export PATH="/opt/miniconda/bin:/opt/miniconda/condabin:/usr/local/cuda/bin:$PATH"
-export LD_LIBRARY_PATH="/usr/local/cuda/lib64:$LD_LIBRARY_PATH"
-conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main
-conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
-conda config --set channel_priority strict
-
-# setup vllm environment
-conda create -p /opt/conda/envs/vllm python=3.12 -y
-conda activate /opt/conda/envs/vllm
-pip install vllm "huggingface_hub[cli]" "open-webui[all]"
-conda deactivate
-
-# setup shared conda environments
-chmod -R 7777 /opt/conda
-chmod -R 7777 /opt/miniconda
+mv /usr/bin/google-chrome-stable /usr/bin/google-chrome-stable-real
+mv /usr/bin/google-chrome /usr/bin/google-chrome-real
 
 # Cleanup
-rm -f /opt/Miniconda3-latest-Linux-x86_64.sh
-conda clean -afy
 rm -rf /tmp/*
