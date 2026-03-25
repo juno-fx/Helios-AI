@@ -18,8 +18,6 @@ services:
       - USER=helios
       - UID=5040
       - SUDO=true
-      - PATH_EXTRA=/opt/miniconda/bin:/opt/miniconda/condabin
-      - LD_LIBRARY_PATH_EXTRA=/usr/local/cuda/lib64
 #      - DISABLE_VGL=1
 #      - DESKTOP_FILES="/desktops/*.desktop:/tmp/*.desktop"
 #      - IDLE_TIME=1

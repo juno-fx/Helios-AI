@@ -82,9 +82,6 @@ $(gpu_selector_verbose "$chosen")
 
 EOF
 
-export PATH=$PATH_EXTRA:$PATH
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH_EXTRA:$LD_LIBRARY_PATH
-
 if [ -x /usr/bin/xfce4-session ]; then
 	if [[ -n "$DISABLE_VGL" ]]; then
 		# Run without vglrun if DISABLE_VGL is set
