@@ -2,8 +2,15 @@ packages:
   # ====================================
   # Common packages across all distributions
   # ====================================
+
+  # gcc compiler for building native extensions and compiling code; essential for development and many Python packages with C extensions.
+  - common: gcc
+
   # sudo for privilege escalation
   - common: sudo
+
+  # zsh shell, an alternative to bash with enhanced features and user experience.
+  - common: zsh
 
   # keyboard/mouse simulation for x11
   - common: xdotool

@@ -81,5 +81,6 @@ jobs:
 
       - name: Clean Up
         shell: bash
+        continue-on-error: true
         if: always()
         run: docker system prune -af
