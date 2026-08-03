@@ -38,6 +38,22 @@ mtime() {
 	[ -e "$1" ] && stat -c %Y "$1" 2>/dev/null || echo 0
 }
 
+# Mirrors helios_session_key() in session-key.sh. Keep in sync.
+session_key() {
+	local ns_file=/var/run/secrets/kubernetes.io/serviceaccount/namespace
+	local key=""
+
+	if [ -r "$ns_file" ]; then
+		read -r key <"$ns_file" 2>/dev/null
+	fi
+
+	case "$key" in
+	"" | */*) key="$HOSTNAME" ;;
+	esac
+
+	echo "$key"
+}
+
 # Address of the session bus xfce4-session is actually on.
 #
 # A kubernetes preStop hook inherits only the container spec's environment, so
@@ -49,13 +65,17 @@ mtime() {
 #
 # The address cannot be recovered from the running process either: reading
 # /proc/<pid>/environ needs CAP_SYS_PTRACE, which is not in the container's
-# capability set. So enumerate the listening abstract sockets and ask each one
-# whether it has the session manager on it.
+# capability set. So enumerate the listening dbus sockets and ask each one
+# whether it has the session manager on it. The transport varies by distro -
+# abstract on some, a plain path on others - so build the address to match.
 session_bus() {
 	local sock addr
 
-	for sock in $(awk '/^@?.*@\/tmp\/dbus-/ {print $NF}' /proc/net/unix 2>/dev/null | sort -u); do
-		addr="unix:abstract=${sock#@}"
+	for sock in $(awk '$NF ~ /\/tmp\/dbus-/ {print $NF}' /proc/net/unix 2>/dev/null | sort -u); do
+		case "$sock" in
+		@*) addr="unix:abstract=${sock#@}" ;;
+		*) addr="unix:path=$sock" ;;
+		esac
 		if su "$USER" -c "DBUS_SESSION_BUS_ADDRESS='$addr' dbus-send --session --print-reply --reply-timeout=3000 --dest=org.freedesktop.DBus /org/freedesktop/DBus org.freedesktop.DBus.NameHasOwner string:org.xfce.SessionManager" 2>/dev/null | grep -q 'boolean true'; then
 			echo "$addr"
 			return 0
@@ -75,12 +95,7 @@ session_bus() {
 save_session() {
 	local dir key before newest bus last size i
 
-	if [ ! -r /opt/helios/session-key.sh ]; then
-		log "session-key.sh not found, skipping save"
-		return 0
-	fi
-	source /opt/helios/session-key.sh
-	key=$(helios_session_key)
+	key=$(session_key)
 
 	dir="$(getent passwd "$USER" | cut -d: -f6)/.cache/sessions"
 	if [ ! -d "$dir" ]; then
@@ -138,8 +153,10 @@ save_session() {
 		sleep 0.5
 	done
 
-	if cp -p "$newest" "${dir}/helios-session-${key}"; then
-		chown "$USER" "${dir}/helios-session-${key}" 2>/dev/null || true
+	# Keep these file ops running as $USER, consistent with everything else
+	# this script does to the session. Args are passed positionally rather
+	# than interpolated into the -c string.
+	if su -s /bin/bash "$USER" -c 'cp -p "$1" "$2"' -- "$newest" "${dir}/helios-session-${key}"; then
 		log "saved $(basename "$newest") -> helios-session-${key}"
 
 		# The pod-named file is a handoff buffer with a one-container lifetime -
@@ -148,7 +165,7 @@ save_session() {
 		# removes our own hostname's files and never another live workstation's
 		# whose name happens to share our hostname as a prefix. Ordered after
 		# the copy so a failed save leaves the original in place.
-		rm -f "$dir/xfce4-session-${HOSTNAME%%.*}:"* "$dir/xfce4-session-${HOSTNAME%%.*}."*
+		su -s /bin/bash "$USER" -c 'rm -f "$1/xfce4-session-$2:"* "$1/xfce4-session-$2."*' -- "$dir" "${HOSTNAME%%.*}"
 	else
 		log "copy to helios-session-${key} failed"
 	fi
