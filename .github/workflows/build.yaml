@@ -83,4 +83,5 @@ jobs:
         shell: bash
         continue-on-error: true
         if: always()
+        continue-on-error: true
         run: docker system prune -af
